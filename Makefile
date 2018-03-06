@@ -23,18 +23,17 @@ all:
 run:
 	$(BIN_PATH_IN)/$(PROJECT)
 
+.PHONY: version
 version:
-	@echo $(VERSION)
+	@echo "Version $(VERSION) (git-$(GIT_SHA))"
 
 install:
 	mkdir -p $(BIN_PATH)
 	install -p $(BIN_PATH_IN)/$(PROJECT) $(BIN_PATH)
-	install -p $(BIN_PATH_IN)/$(PROJECT)-run $(BIN_PATH)
 	install -p $(BIN_PATH_IN)/$(PROJECT)-init $(BIN_PATH)
 
 uninstall:
 	rm -f $(BIN_PATH)/$(PROJECT)-init
-	rm -f $(BIN_PATH)/$(PROJECT)-run
 	rm -f $(BIN_PATH)/$(PROJECT)
 	rmdir -p $(BIN_PATH) 2> /dev/null || true
 
