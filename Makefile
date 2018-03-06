@@ -70,7 +70,4 @@ docker-start:
 docker-stop:
 	docker stop $(PROJECT)
 
-docker-attach:
-	docker exec -it $(PROJECT) sh
-
 distclean: docker-clean clean
