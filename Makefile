@@ -19,6 +19,7 @@ all:
 		-ldflags "-X main.version=$(VERSION) \
 				  -X main.git_sha=$(GIT_SHA)" \
 		-o $(BIN_PATH_IN)/$(PROJECT) src/$(PROJECT).go
+	cp src/$(PROJECT)-init $(BIN_PATH_IN)
 
 run:
 	$(BIN_PATH_IN)/$(PROJECT)
@@ -38,6 +39,7 @@ uninstall:
 	rmdir -p $(BIN_PATH) 2> /dev/null || true
 
 clean:
+	rm -f $(BIN_PATH_IN)/$(PROJECT)-init
 	rm -f $(BIN_PATH_IN)/$(PROJECT)
 	rmdir -p $(BIN_PATH_IN) 2> /dev/null || true
 
