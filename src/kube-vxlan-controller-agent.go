@@ -21,7 +21,8 @@ func main() {
     }
 
     c := make(chan os.Signal, 1)
-    signal.Notify(c, os.Interrupt, syscall.SIGTERM)
+    signal.Notify(c, os.Interrupt,
+                     syscall.SIGTERM, syscall.SIGINT, syscall.SIGCHLD)
     <-c
 
     fmt.Printf("I%s: Done.\n", time.Now().UTC().Format(TsFormat))
