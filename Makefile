@@ -24,10 +24,6 @@ all:
 run:
 	$(BIN_PATH_IN)/$(PROJECT)
 
-.PHONY: version
-version:
-	@echo "Version $(VERSION) (git-$(GIT_SHA))"
-
 install:
 	mkdir -p $(BIN_PATH)
 	install -p $(BIN_PATH_IN)/$(PROJECT) $(BIN_PATH)
@@ -73,3 +69,7 @@ docker-stop:
 	docker stop $(PROJECT)
 
 distclean: docker-clean clean
+
+.PHONY: version
+version:
+	@echo "Version $(VERSION) (git-$(GIT_SHA))"
