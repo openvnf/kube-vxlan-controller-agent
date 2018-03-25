@@ -1,5 +1,0 @@
-#!/bin/sh
-
-while ! [ -e /run/terminate ]; do
-    sleep 1
-done

@@ -4,71 +4,44 @@ PROJECT = kube-vxlan-controller-agent
 VERSION = $(shell cat Version)
 GIT_SHA = $(shell git rev-parse HEAD | cut -c1-8)
 
-PREFIX = usr/local
-
 BUILD_DIR = _build
 BUILD_DIR_IMAGE = $(BUILD_DIR)/image
 
-BIN_DIR = bin
-BIN_PATH = $(DEST_DIR)/$(PREFIX)/$(BIN_DIR)
-BIN_PATH_IN = $(BUILD_DIR)/bin
-
 all:
-	mkdir -p $(BIN_PATH_IN)
-	GOOS=$(PLATFORM) go build \
-		-ldflags "-X main.version=$(VERSION) \
-				  -X main.git_sha=$(GIT_SHA)" \
-		-o $(BIN_PATH_IN)/$(PROJECT) src/$(PROJECT).go
-	cp src/$(PROJECT)-init $(BIN_PATH_IN)
-
-run:
-	$(BIN_PATH_IN)/$(PROJECT)
-
-install:
-	mkdir -p $(BIN_PATH)
-	install -p $(BIN_PATH_IN)/$(PROJECT) $(BIN_PATH)
-	install -p $(BIN_PATH_IN)/$(PROJECT)-init $(BIN_PATH)
-
-uninstall:
-	rm -f $(BIN_PATH)/$(PROJECT)-init
-	rm -f $(BIN_PATH)/$(PROJECT)
-	rmdir -p $(BIN_PATH) 2> /dev/null || true
-
-clean:
-	rm -f $(BIN_PATH_IN)/$(PROJECT)-init
-	rm -f $(BIN_PATH_IN)/$(PROJECT)
-	rmdir -p $(BIN_PATH_IN) 2> /dev/null || true
 
 docker-build:
-	$(MAKE) PLATFORM=linux
-	$(MAKE) install DEST_DIR=$(BUILD_DIR_IMAGE) PREFIX=
+	mkdir -p $(BUILD_DIR_IMAGE)
 	install -p -m 644 Dockerfile $(BUILD_DIR_IMAGE)
 	docker build $(BUILD_DIR_IMAGE) -t $(USER)/$(PROJECT):$(VERSION)
-	docker tag $(USER)/$(PROJECT):$(VERSION) $(USER)/$(PROJECT):latest
+	docker tag $(USER)/$(PROJECT):$(VERSION) $(USER)/$(PROJECT):edge
 
 docker-push:
 	docker push $(USER)/$(PROJECT):$(VERSION)
+	docker push $(USER)/$(PROJECT):edge
+
+docker-release:
+	docker tag $(USER)/$(PROJECT):$(VERSION) $(USER)/$(PROJECT):latest
 	docker push $(USER)/$(PROJECT):latest
 
 docker-clean:
 	rm -f $(BUILD_DIR_IMAGE)/Dockerfile
-	$(MAKE) uninstall DEST_DIR=$(BUILD_DIR_IMAGE) PREFIX=
+	rmdir -p $(BUILD_DIR_IMAGE) 2> /dev/null || true
 
 docker-clean-dangling:
 	docker images -qf dangling=true | xargs docker rmi
 
 docker-run:
-	docker run --name $(PROJECT) --rm -it \
-		$(USER)/$(PROJECT):$(VERSION) $(PROJECT)
+	docker run --name $(PROJECT) --rm \
+		$(USER)/$(PROJECT):$(VERSION)
 
 docker-start:
 	docker run --name $(PROJECT) --rm -d \
-		$(USER)/$(PROJECT):$(VERSION) $(PROJECT)
+		$(USER)/$(PROJECT):$(VERSION)
 
 docker-stop:
 	docker stop $(PROJECT)
 
-distclean: docker-clean clean
+distclean: docker-clean
 
 .PHONY: version
 version:
