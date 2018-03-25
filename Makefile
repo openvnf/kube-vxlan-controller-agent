@@ -9,6 +9,10 @@ BUILD_DIR_IMAGE = $(BUILD_DIR)/image
 
 all:
 
+git-release:
+	git tag -a v$(VERSION)
+	git push origin v$(VERSION)
+
 docker-build:
 	mkdir -p $(BUILD_DIR_IMAGE)
 	install -p -m 644 Dockerfile $(BUILD_DIR_IMAGE)
