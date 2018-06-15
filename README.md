@@ -13,5 +13,5 @@ the Agent image extends the Pause one with the "iproute2" package.
 
 <!-- Links -->
 
-[Kube VXLAN Controller]: https://gitlab.tpip.net/aalferov/kube-vxlan-controller
-[Pause]: https://gitlab.tpip.net/aalferov/pause
+[Kube VXLAN Controller]: https://github.com/openvnf/kube-vxlan-controller
+[Pause]: https://github.com/aialferov/pause
