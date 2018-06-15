@@ -1,4 +1,4 @@
-USER = aialferov
+USER = openvnf
 PROJECT = kube-vxlan-controller-agent
 
 VERSION = $(shell cat Version)
